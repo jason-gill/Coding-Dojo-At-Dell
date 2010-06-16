@@ -35,10 +35,10 @@ namespace KataBankOCR
 
         public static Digit From( string stringDigit )
         {
-            if( stringDigit == String.Format( "{0}{1}{2}", LINE ) )
-            {
-                return CreatedDigit();
-            }
+            //if( stringDigit == String.Format( "{0}{1}{2}", LINE ) )
+            //{
+            //    return CreatedDigit();
+            //}
 
             throw new NotSupportedException();
         }
