@@ -1,0 +1,9 @@
+6/9/2010 - First coding dojo session.
+
+We starting looking at the <a href="http://codingdojo.org/cgi-bin/wiki.pl?KataBankOCR">KataBankOCR</a> problem.
+After some white board discussions and some TDD we ended up with a
+pretty good start at parsing the ascii digits into numbers.  We decided
+to continue working on this problem during the next coding dojo session.
+
+In the next session we will focus on actually parsing the whole
+account number and hopefully get into some error handling.
