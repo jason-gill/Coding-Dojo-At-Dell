@@ -1,3 +1,13 @@
+7/14/2010 - Second coding dojo session.
+
+We continued looking at the http://codingdojo.org/cgi-bin/wiki.pl?KataBankOCR problem.
+
+We focused on reading an account number from a file.
+
+Lesson learned: Don't use i,j,k as looping index variable names, name them something meaningful like rowIndex and columnIndex.
+
+=================================================
+
 6/9/2010 - First coding dojo session.
 
 We starting looking at the http://codingdojo.org/cgi-bin/wiki.pl?KataBankOCR problem.
