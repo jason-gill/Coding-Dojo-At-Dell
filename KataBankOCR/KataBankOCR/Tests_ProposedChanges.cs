@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -5,7 +6,7 @@ using Machine.Specifications;
 
 namespace KataBankOCR.ProposedChanges
 {
-    public abstract class from_a_file
+    public abstract class digit_from_a_file
     {
         protected static Digit Digit;
         protected static string Value;
@@ -44,65 +45,130 @@ namespace KataBankOCR.ProposedChanges
         }
     }
 
-    public class When_parsing_the_3X3_ascii_digit_0 : from_a_file
+    public class When_parsing_the_3X3_ascii_digit_0 : digit_from_a_file
     {
         It should_have_a_value_of_0 = () => Digit.Value.ShouldEqual( Value );
         Because of = () => Digit = Digit.From( AsciiDigit );
         Establish context = () => Value = "0";
     }
-    public class When_parsing_the_3X3_ascii_digit_1 : from_a_file
+    public class When_parsing_the_3X3_ascii_digit_1 : digit_from_a_file
     {
         It should_have_a_value_of_1 = () => Digit.Value.ShouldEqual( Value );
         Because of = () => Digit = Digit.From( AsciiDigit );
         Establish context = () => Value = "1";
     }
-    public class When_parsing_the_3X3_ascii_digit_2 : from_a_file
+    public class When_parsing_the_3X3_ascii_digit_2 : digit_from_a_file
     {
         It should_have_a_value_of_2 = () => Digit.Value.ShouldEqual( Value );
         Because of = () => Digit = Digit.From( AsciiDigit );
         Establish context = () => Value = "2";
     }
-    public class When_parsing_the_3X3_ascii_digit_3 : from_a_file
+    public class When_parsing_the_3X3_ascii_digit_3 : digit_from_a_file
     {
         It should_have_a_value_of_3 = () => Digit.Value.ShouldEqual( Value );
         Because of = () => Digit = Digit.From( AsciiDigit );
         Establish context = () => Value = "3";
     }
-    public class When_parsing_the_3X3_ascii_digit_4 : from_a_file
+    public class When_parsing_the_3X3_ascii_digit_4 : digit_from_a_file
     {
         It should_have_a_value_of_4 = () => Digit.Value.ShouldEqual( Value );
         Because of = () => Digit = Digit.From( AsciiDigit );
         Establish context = () => Value = "4";
     }
-    public class When_parsing_the_3X3_ascii_digit_5 : from_a_file
+    public class When_parsing_the_3X3_ascii_digit_5 : digit_from_a_file
     {
         It should_have_a_value_of_5 = () => Digit.Value.ShouldEqual( Value );
         Because of = () => Digit = Digit.From( AsciiDigit );
         Establish context = () => Value = "5";
     }
-    public class When_parsing_the_3X3_ascii_digit_6 : from_a_file
+    public class When_parsing_the_3X3_ascii_digit_6 : digit_from_a_file
     {
         It should_have_a_value_of_6 = () => Digit.Value.ShouldEqual( Value );
         Because of = () => Digit = Digit.From( AsciiDigit );
         Establish context = () => Value = "6";
     }
-    public class When_parsing_the_3X3_ascii_digit_7 : from_a_file
+    public class When_parsing_the_3X3_ascii_digit_7 : digit_from_a_file
     {
         It should_have_a_value_of_7 = () => Digit.Value.ShouldEqual( Value );
         Because of = () => Digit = Digit.From( AsciiDigit );
         Establish context = () => Value = "7";
     }
-    public class When_parsing_the_3X3_ascii_digit_8 : from_a_file
+    public class When_parsing_the_3X3_ascii_digit_8 : digit_from_a_file
     {
         It should_have_a_value_of_8 = () => Digit.Value.ShouldEqual( Value );
         Because of = () => Digit = Digit.From( AsciiDigit );
         Establish context = () => Value = "8";
     }
-    public class When_parsing_the_3X3_ascii_digit_9 : from_a_file
+    public class When_parsing_the_3X3_ascii_digit_9 : digit_from_a_file
     {
         It should_have_a_value_of_9 = () => Digit.Value.ShouldEqual( Value );
         Because of = () => Digit = Digit.From( AsciiDigit );
         Establish context = () => Value = "9";
+    }
+
+    public class When_parsing_the_account_number_123456789
+    {
+        It should_have_a_value_of_123456789 = () => accountNumber.Value.ShouldEqual( "123456789");
+
+        Because of = () =>
+                     {
+                         accountNumber = AccountNumber.From( @"Files\123456789.txt" ); 
+                     };
+
+        static AccountNumber accountNumber;
+    }
+
+    class AccountNumber
+    {
+        public string Value;
+
+        public static AccountNumber From( string fileName )
+        {
+            TextReader tr = new StreamReader( string.Format( fileName ) );
+            char[,] accountNumberFromFile = ParseFrom( tr );
+
+            string accountNumberString = "";
+
+            char[,] digit = new char[3,3];
+            for( int i = 0; i < accountNumberFromFile.GetLength( 1 ); i = i + 3 )
+            {
+                for( int lineIndex = 0; lineIndex < 3; lineIndex++ )
+                {
+                    for( int columnIndex = i; columnIndex < i + 3; columnIndex++ )
+                    {
+                        digit[lineIndex, columnIndex - i] = accountNumberFromFile[lineIndex, columnIndex];
+                    }
+                }
+
+                accountNumberString += Digit.From( digit ).Value;
+            }
+
+            return new AccountNumber { Value = accountNumberString };
+        }
+
+        static char[,] ParseFrom( TextReader tr )
+        {
+            List<string> lines = new List<string>();
+
+            string readLine;
+            while( (readLine = tr.ReadLine()) != null )
+            {
+                lines.Add( readLine );
+            }
+
+            char[,] asciiDigit = new char[lines.Count, lines[0].Length];
+
+
+            for( int lineIndex = 0; lineIndex < lines.Count; lineIndex++ )
+            {
+                for( int columnIndex = 0; columnIndex < lines[lineIndex].Length; columnIndex++ )
+                {
+                    asciiDigit[lineIndex, columnIndex] = lines[lineIndex][columnIndex];
+                }
+            }
+
+            return asciiDigit;
+        }
     }
 
     public abstract class Digit

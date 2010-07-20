@@ -54,6 +54,9 @@
     <Compile Include="Tests_ProposedChanges.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Files\123456789.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Files\AsciiDigit3x3_0.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
