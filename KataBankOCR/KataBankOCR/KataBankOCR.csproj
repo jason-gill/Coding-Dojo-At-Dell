@@ -49,9 +49,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountNumber.cs" />
+    <Compile Include="AccountNumbers.cs" />
+    <Compile Include="Digit.cs" />
+    <Compile Include="Digits3x3\Digit0.cs" />
+    <Compile Include="Digits3x3\Digit1.cs" />
+    <Compile Include="Digits3x3\Digit2.cs" />
+    <Compile Include="Digits3x3\Digit3.cs" />
+    <Compile Include="Digits3x3\Digit4.cs" />
+    <Compile Include="Digits3x3\Digit5.cs" />
+    <Compile Include="Digits3x3\Digit6.cs" />
+    <Compile Include="Digits3x3\Digit7.cs" />
+    <Compile Include="Digits3x3\Digit8.cs" />
+    <Compile Include="Digits3x3\Digit9.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests.cs" />
-    <Compile Include="Tests_ProposedChanges.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Files\123456789.txt">
