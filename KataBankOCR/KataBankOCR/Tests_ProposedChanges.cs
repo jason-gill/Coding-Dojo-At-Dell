@@ -112,31 +112,51 @@ namespace KataBankOCR.ProposedChanges
 
         Because of = () =>
                      {
-                         accountNumber = AccountNumber.From( @"Files\123456789.txt" ); 
+                         TextReader tr = new StreamReader( string.Format( @"Files\123456789.txt" ) );
+                         List<char[,]> accountNumberArray = AccountNumbers.ParseFrom( tr );
+
+                         accountNumber = AccountNumber.From( accountNumberArray[0] );
                      };
 
         static AccountNumber accountNumber;
+    }
+
+    public class When_parsing_a_file_that_has_two_account_numbers
+    {
+        It should_have_account_number_123456789 = () => 
+            firstAccountNumber.Value.ShouldEqual( "123456789" );
+        It should_have_account_number_723456780 = () => 
+            secondAccountNumber.Value.ShouldEqual( "723456780" );
+
+        Because of = () =>
+                     {
+                         TextReader tr = new StreamReader( string.Format( @"Files\TwoAccountNumbers.txt" ) );
+                         List<char[,]> accountNumberArray = AccountNumbers.ParseFrom( tr );
+
+                         firstAccountNumber = AccountNumber.From( accountNumberArray[0] );
+                         secondAccountNumber = AccountNumber.From( accountNumberArray[1] );
+                     };
+
+        static AccountNumber firstAccountNumber;
+        static AccountNumber secondAccountNumber;
     }
 
     class AccountNumber
     {
         public string Value;
 
-        public static AccountNumber From( string fileName )
+        public static AccountNumber From( char[,] accountNumberArray )
         {
-            TextReader tr = new StreamReader( string.Format( fileName ) );
-            char[,] accountNumberFromFile = ParseFrom( tr );
-
             string accountNumberString = "";
 
             char[,] digit = new char[3,3];
-            for( int i = 0; i < accountNumberFromFile.GetLength( 1 ); i = i + 3 )
+            for( int i = 0; i < accountNumberArray.GetLength( 1 ); i = i + 3 )
             {
                 for( int lineIndex = 0; lineIndex < 3; lineIndex++ )
                 {
                     for( int columnIndex = i; columnIndex < i + 3; columnIndex++ )
                     {
-                        digit[lineIndex, columnIndex - i] = accountNumberFromFile[lineIndex, columnIndex];
+                        digit[lineIndex, columnIndex - i] = accountNumberArray[lineIndex, columnIndex];
                     }
                 }
 
@@ -145,9 +165,13 @@ namespace KataBankOCR.ProposedChanges
 
             return new AccountNumber { Value = accountNumberString };
         }
-
-        static char[,] ParseFrom( TextReader tr )
+    }
+    public abstract class AccountNumbers
+    {
+        public static List<char[,]> ParseFrom( TextReader tr )
         {
+            List<char[,]> accountNumbers = new List<char[,]>();
+
             List<string> lines = new List<string>();
 
             string readLine;
@@ -156,18 +180,28 @@ namespace KataBankOCR.ProposedChanges
                 lines.Add( readLine );
             }
 
-            char[,] asciiDigit = new char[lines.Count, lines[0].Length];
-
-
-            for( int lineIndex = 0; lineIndex < lines.Count; lineIndex++ )
+            for( int indexToTheFirstLineOfAnAccountNumber = 0;
+                indexToTheFirstLineOfAnAccountNumber < lines.Count;
+                indexToTheFirstLineOfAnAccountNumber = indexToTheFirstLineOfAnAccountNumber + 4 )
             {
-                for( int columnIndex = 0; columnIndex < lines[lineIndex].Length; columnIndex++ )
+                char[,] accountNumber = new char[3, lines[0].Length];
+
+                for( int lineIndex = indexToTheFirstLineOfAnAccountNumber;
+                    lineIndex < indexToTheFirstLineOfAnAccountNumber + 3;
+                    lineIndex++ )
                 {
-                    asciiDigit[lineIndex, columnIndex] = lines[lineIndex][columnIndex];
+                    for( int columnIndex = 0;
+                        columnIndex < lines[lineIndex].Length;
+                        columnIndex++ )
+                    {
+                        accountNumber[lineIndex - indexToTheFirstLineOfAnAccountNumber, columnIndex] = lines[lineIndex][columnIndex];
+                    }
                 }
+
+                accountNumbers.Add( accountNumber );
             }
 
-            return asciiDigit;
+            return accountNumbers;
         }
     }
 
